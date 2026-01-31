@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="color-scheme" content="dark" />
+  <title>Reseller Order — Khonsu Socials</title>
+<!-- API (WAJIB biar JS bisa baca endpoint tanpa localStorage) -->
+  <meta name="khonsu-api" content="https://script.google.com/macros/s/AKfycbx7pUHlngyCkkYhP6FtbqeBexy0-dlE8jlyaiPBPCVFUFIGpEZdxR267Ohy3EPPVyf_/exec">
+  <!-- CSS (WAJIB path benar dari /pages) -->
+  <link rel="stylesheet" href="../assets/css/main.css" />
+</head>
+
+<body class="theme--dark">
+  <a class="skip-link" href="#main">Skip ke konten</a>
+
+  <noscript>
+    <div class="noscript">
+      Halaman ini butuh JavaScript untuk membuat order reseller dan mengirim ke Apps Script.
+      Aktifkan JavaScript lalu refresh.
+    </div>
+  </noscript>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container">
+      <nav class="nav" aria-label="Navigasi utama">
+        <div class="nav__left">
+          <div class="brand">
+            <span class="brand__name">Khonsu Socials</span>
+            <span class="brand__tag">Reseller Order • Sistem rapi</span>
+          </div>
+        </div>
+
+        <div class="nav__center">
+          <a class="nav__link" href="../index.html">Home</a>
+          <a class="nav__link" href="order.html">Order</a>
+          <a class="nav__link" href="status.html">Cek Status</a>
+          <a class="nav__link" href="reseller.html">Reseller</a>
+          <a class="nav__link" href="reseller-order.html" aria-current="page">Reseller Order</a>
+          <a class="nav__link" href="joki-tugas.html">Joki Tugas</a>
+          <a class="nav__link" href="joki-skripsi.html">Joki Skripsi</a>
+        </div>
+
+        <div class="nav__right">
+          <img class="nav__logo" src="../assets/images/brand/logo.png" alt="Logo Khonsu Socials" />
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- Hero -->
+    <section class="section section--page-hero">
+      <div class="container">
+        <div class="page-hero">
+          <div class="page-hero__content">
+            <span class="badge">untuk Reseller</span>
+            <h1 class="page-hero__title">Order Reseller.</h1>
+            <p class="page-hero__subtitle">
+              Buat pesanan reseller dengan alur yang jelas dan sederhana.
+               Pilih layanan dan paket sesuai kebutuhan, lengkapi detail pesanan, lalu submit.
+               Setelah itu, kamu akan mendapatkan <strong>Order ID</strong> untuk memantau status pesanan.
+            </p>
+
+            <div class="hero__cta">
+              <a class="btn btn--outline" href="reseller.html">Pelajari Reseller</a>
+              <a class="btn btn--primary" href="https://wa.me/6281314604337" target="_blank" rel="noopener">Chat Admin</a>
+              <a class="btn btn--ghost" href="status.html">Cek Status</a>
+            </div>
+
+            <div class="grid grid--3" style="margin-top:14px;">
+              <div class="summary-row">
+                <span class="summary-row__k">Sistem</span>
+                <span class="summary-row__v">Tracking Status Pesanan</span>
+              </div>
+              <div class="summary-row">
+                <span class="summary-row__k">Konfirmasi</span>
+                <span class="summary-row__v">WhatsApp</span>
+              </div>
+              <div class="summary-row">
+                <span class="summary-row__k">Payment</span>
+                <span class="summary-row__v">Manual</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="page-hero__side">
+            <div class="notice ks-moon-angle">
+              <h2 class="notice__title">Catatan singkat</h2>
+              <ul class="notice__list">
+                <li>Pastikan paket dan data yang kamu pilih sudah sesuai.</li>
+                <li>Setelah submit, kamu akan mendapatkan <strong>Order ID</strong>.</li>
+                <li>Gunakan <strong>Order ID</strong> untuk mengecek status pesanan.</li>
+                <li>Simpan <strong>Order ID</strong> hingga pesanan selesai diproses.</li>
+              </ul>
+              <p class="hint" style="margin-top:10px;">
+                Kalau kamu test dari device lain, secret tidak ikut. Tetap bisa cek status pakai Order ID.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pilih kategori layanan -->
+    <section class="section section--alt">
+      <div class="container">
+        <div class="section-head">
+          <h2 class="section-title">1) Pilih kategori layanan</h2>
+          <p class="section-desc">Paket & harga akan muncul setelah kamu pilih kategori, lalu pilih paket.</p>
+        </div>
+
+        <div class="grid grid--3" id="resellerCategoryGrid">
+          <article class="select-card" role="button" tabindex="0" data-service-category="instagram" aria-label="Pilih Instagram">
+            <h3 class="select-card__title">Instagram</h3>
+            <p class="select-card__sub">Followers • Likes • Views • Reach</p>
+            <ul class="select-card__list">
+              <li>Cocok untuk social proof</li>
+              <li>Order cepat dan repeat</li>
+            </ul>
+            <div class="select-card__foot">
+              <span class="pill">IG</span>
+              <span class="pill pill--ghost">Reseller</span>
+            </div>
+          </article>
+
+          <article class="select-card" role="button" tabindex="0" data-service-category="tiktok" aria-label="Pilih TikTok">
+            <h3 class="select-card__title">TikTok</h3>
+            <p class="select-card__sub">Views • Likes • Followers</p>
+            <ul class="select-card__list">
+              <li>Boost trust + engagement</li>
+              <li>Enak buat campaign</li>
+            </ul>
+            <div class="select-card__foot">
+              <span class="pill">TT</span>
+              <span class="pill pill--ghost">Reseller</span>
+            </div>
+          </article>
+
+          <article class="select-card" role="button" tabindex="0" data-service-category="shopee" aria-label="Pilih Shopee">
+            <h3 class="select-card__title">Shopee</h3>
+            <p class="select-card__sub">Profile ready • Social proof</p>
+            <ul class="select-card__list">
+              <li>Rapihin tampilan toko</li>
+              <li>Bikin toko keliatan siap</li>
+            </ul>
+            <div class="select-card__foot">
+              <span class="pill">SH</span>
+              <span class="pill pill--ghost">Reseller</span>
+            </div>
+          </article>
+        </div>
+
+        <div class="notice" style="margin-top:14px;">
+          <h3 class="notice__title">Untuk Reseller</h3>
+          <p class="notice__text">
+            Cocok untuk pemula yang ingin fokus jualan dengan sistem yang rapi dan eksekusi yang dibantu.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Form reseller order -->
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h2 class="section-title">2) Isi detail order</h2>
+          <p class="section-desc">
+            Paket & harga akan muncul setelah kamu pilih kategori, lalu pilih paket.
+          </p>
+        </div>
+
+        <div class="grid grid--2">
+          <!-- Form -->
+          <div class="card">
+            <div class="card__head">
+              <h3 class="card__title">Form Reseller Order</h3>
+              <p class="card__sub">
+               Semua pesanan dicatat dan dikelola secara rapi oleh sistem.
+              </p>
+            </div>
+
+            <div class="form" id="resellerForm" data-form="reseller">
+              <!-- Paket + Qty + Hint Harga (styling: .ks-package-wrap + #resellerPackage #resellerQty #resellerPriceHint) -->
+              <div class="ks-package-wrap" id="resellerPackageWrap">
+                <div class="field">
+                  <label class="label" for="resellerPackage">Pilih Paket</label>
+                  <select class="input" id="resellerPackage" aria-label="Pilih paket reseller">
+                    <option value="">— Pilih kategori dulu —</option>
+                  </select>
+                  <p class="hint" id="resellerPackageHint">
+                    Paket diambil dari data services. Kalau kosong, pastikan kategori sudah dipilih.
+                  </p>
+                </div>
+
+                <div class="field">
+                  <label class="label" for="resellerQty">Qty</label>
+                  <input class="input" id="resellerQty" type="number" inputmode="numeric" min="1" placeholder="Contoh: 1000" />
+                  <p class="hint">Qty mengikuti aturan min/max paket (jika ada).</p>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="field" style="grid-column: 1 / -1;">
+                  <label class="label">Ringkasan Harga</label>
+                  <div id="resellerPriceHint">
+                    <p style="margin:0; line-height:1.8;">
+                      Pilih paket untuk melihat estimasi harga.
+                    </p>
+                    <p class="hint" style="margin:6px 0 0;">
+                      Harga final tetap via konfirmasi WhatsApp. QRIS belum tersedia.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Identitas reseller -->
+              <div class="field">
+                <label class="label" for="resellerName">Nama Reseller</label>
+                <input class="input" id="resellerName" type="text" placeholder="Contoh: KhonsuReseller" />
+              </div>
+
+              <div class="field">
+                <label class="label" for="resellerWhatsapp">WhatsApp Reseller</label>
+                <input class="input" id="resellerWhatsapp" type="tel" placeholder="Contoh: 0813xxxxxxx" />
+                <p class="hint">Nomor ini untuk koordinasi reseller, bukan nomor customer.</p>
+              </div>
+
+              <div class="divider"></div>
+
+              <!-- Identitas customer -->
+              <div class="field">
+                <label class="label" for="customerName">Nama Customer</label>
+                <input class="input" id="customerName" type="text" placeholder="Contoh: Jamal" />
+              </div>
+
+              <div class="field">
+                <label class="label" for="customerWa">WhatsApp Customer</label>
+                <input class="input" id="customerWa" type="tel" placeholder="Contoh: 08xxxxxxxxxx" />
+              </div>
+
+              <div class="field">
+                <label class="label" for="targetLink">Target (Username / Link / Produk)</label>
+                <input class="input" id="targetLink" type="text" placeholder="Contoh: @username atau https://..." />
+              </div>
+
+              <div class="field">
+                <label class="label" for="deadline">Deadline</label>
+                <input class="input" id="deadline" type="text" placeholder="Contoh: 1-2 hari / tanggal tertentu" />
+              </div>
+
+              <div class="field">
+                <label class="label" for="brief">Brief (Catatan)</label>
+                <textarea class="textarea" id="brief" placeholder="Tulis brief singkat, contoh: no drop / refill / jangan start sebelum konfirmasi..."></textarea>
+              </div>
+
+              <div class="field">
+                <label class="label" for="payMethod">Metode Pembayaran (Manual)</label>
+                <select class="input" id="payMethod">
+                  <option value="MANUAL">Manual (setelah konfirmasi WhatsApp)</option>
+                  <option value="SEABANK">SeaBank</option>
+                  <option value="BCA">BCA</option>
+                  <option value="EWALLET">ShopeePay / DANA / OVO / GoPay</option>
+                </select>
+                <p class="hint">Pembayaran dilakukan setelah konfirmasi via WhatsApp. QRIS belum tersedia.</p>
+              </div>
+
+              <!-- Submit -->
+              <div class="form__actions">
+                <button class="btn btn--primary" id="btnResellerSubmit" type="button">Submit Reseller Order</button>
+                <a class="btn btn--outline" href="https://wa.me/6281314604337" target="_blank" rel="noopener">Chat Admin</a>
+              </div>
+
+              <p class="hint" id="resellerFormMsg" style="margin-top:10px; display:none;"></p>
+
+              <!-- Hidden fields (untuk JS) -->
+              <input type="hidden" id="serviceCategory" value="" />
+              <input type="hidden" id="serviceCode" value="" />
+              <input type="hidden" id="serviceName" value="" />
+            </div>
+          </div>
+
+          <!-- Result / Summary -->
+          <div class="summary-card" id="resellerResultCard">
+            <h3 class="summary-card__title">Hasil Submit</h3>
+
+            <div class="summary-card__rows">
+              <div class="summary-row">
+                <span class="summary-row__k">Order ID</span>
+                <span class="summary-row__v" id="resellerResultOrderId">-</span>
+              </div>
+              <div class="summary-row">
+                <span class="summary-row__k">Status</span>
+                <span class="summary-row__v" id="resellerResultStatus">-</span>
+              </div>
+              <div class="summary-row">
+                <span class="summary-row__k">Paket</span>
+                <span class="summary-row__v" id="resellerResultPackage">-</span>
+              </div>
+              <div class="summary-row">
+                <span class="summary-row__k">Estimasi</span>
+                <span class="summary-row__v" id="resellerResultAmount">-</span>
+              </div>
+            </div>
+
+            <p class="summary-card__note muted" id="resellerResultNote">
+              Setelah submit berhasil, Order ID akan muncul di sini. Kamu bisa langsung cek status.
+            </p>
+
+            <div class="summary-card__actions">
+              <a class="btn btn--primary" id="btnGoStatus" href="status.html">Buka Status</a>
+              <a class="btn btn--outline" id="btnCopyOrderId" href="#" role="button">Copy Order ID</a>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="notice">
+              <h3 class="notice__title">Pembayaran (Manual)</h3>
+              <ul class="notice__list">
+                <li>SeaBank: <strong>901385015259</strong></li>
+                <li>BCA: <strong>7120632277</strong></li>
+                <li>ShopeePay / DANA / OVO / GoPay: <strong>081314604337</strong></li>
+              </ul>
+              <p class="hint" style="margin-top:10px;">
+                Pembayaran dilakukan setelah konfirmasi via WhatsApp. Mohon maaf, QRIS belum tersedia.
+              </p>
+              <div class="notice__actions">
+                <a class="btn btn--primary" href="https://wa.me/6281314604337" target="_blank" rel="noopener">Chat Konfirmasi</a>
+                <a class="btn btn--outline" href="status.html">Cek Status</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Safety fallback -->
+        <div class="notice" style="margin-top:14px;">
+          <h3 class="notice__title">Kalau submit gagal</h3>
+          <p class="notice__text">
+            Jika proses submit tidak berjalan lancar,
+           silakan hubungi admin melalui WhatsApp dan sertakan detail pesanan kamu.
+           kamu bisa tetap order via WhatsApp dengan format:
+            <span class="code-pill">Kategori</span> • <span class="code-pill">Paket</span> • <span class="code-pill">Qty</span> • <span class="code-pill">Target</span>.
+          </p>
+          <div class="notice__actions">
+            <a class="btn btn--primary" href="https://wa.me/6281314604337" target="_blank" rel="noopener">Chat Order</a>
+            <a class="btn btn--outline" href="order.html">Order Biasa</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer">
+        <div>
+          <p class="footer__brand">Khonsu Socials</p>
+          <p class="muted" style="margin:6px 0 0; line-height:1.6;">
+            © <span id="year">2026</span> — Reseller order yang rapi.
+          </p>
+        </div>
+
+        <div class="footer__right">
+          <a class="footer__link" href="reseller.html">Reseller</a>
+          <a class="footer__link" href="status.html">Cek Status</a>
+          <a class="footer__link" href="https://wa.me/6281314604337" target="_blank" rel="noopener">WhatsApp</a>
+        </div>
+      </div>
+
+      <div class="footer__bottom">
+        <p class="muted" style="margin:0; line-height:1.7; font-size:12px;">
+         Setiap pesanan dapat dicek menggunakan <strong>Order ID</strong> yang diberikan setelah submit.
+       <strong>Order ID</strong> bisa digunakan dari perangkat mana pun.
+      </div>
+    </div>
+  </footer>
+
+  <!-- JS (WAJIB path benar dari /pages) -->
+<script src="../assets/js/main.js"></script>
+<script src="../assets/js/reseller-order.v2.js"></script>
+</body>
+</html>

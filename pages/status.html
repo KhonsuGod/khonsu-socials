@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cek Status — Khonsu Socials</title>
+<!-- API (WAJIB biar JS bisa baca endpoint tanpa localStorage) -->
+  <meta name="khonsu-api" content="https://script.google.com/macros/s/AKfycbx7pUHlngyCkkYhP6FtbqeBexy0-dlE8jlyaiPBPCVFUFIGpEZdxR267Ohy3EPPVyf_/exec">
+
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <meta name="description" content="Cek status pesanan Khonsu Socials. Masukkan Order ID untuk melihat progress, estimasi selesai, dan catatan admin." />
+
+  <style>
+    /* tambahan kecil khusus history (main.css tidak punya style untuk list ini) */
+    .status-history { margin: 0; padding-left: 18px; }
+    .status-history li { margin: 8px 0; }
+    .status-history li span {
+      display:inline-block; min-width: 110px;
+      opacity: .75;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 12px;
+    }
+  </style>
+</head>
+
+<body class="theme--dark">
+<header class="site-header">
+    <div class="container">
+      <nav class="nav" aria-label="Navigasi utama">
+        <div class="nav__left">
+          <div class="brand">
+            <span class="brand__name">Khonsu Socials</span>
+            <span class="brand__tag">Social Proof • Order • Reseller</span>
+          </div>
+        </div>
+
+        <div class="nav__center">
+          <a class="nav__link" href="../index.html">Home</a>
+          <a class="nav__link" href="order.html">Order</a>
+          <a class="nav__link" href="status.html">Cek Status</a>
+          <a class="nav__link" href="reseller.html" aria-current="page">Reseller</a>
+          <a class="nav__link" href="joki-tugas.html">Joki Tugas</a>
+          <a class="nav__link" href="joki-skripsi.html">Joki Skripsi</a>
+        </div>
+
+        <div class="nav__right">
+          <img class="nav__logo" src="../assets/images/brand/logo.png" alt="Logo Khonsu Socials" />
+        </div>
+      </nav>
+    </div>
+  </header>
+
+<main>
+  <section class="section section--page-hero">
+    <div class="container page-hero">
+      <div>
+        <h1 class="page-hero__title">Cek Status Pesanan</h1>
+        <p class="page-hero__subtitle">Masukkan <strong>Order ID</strong> untuk melihat progress, estimasi selesai, dan catatan admin.</p>
+      </div>
+
+      <div class="info-card">
+        <div class="info-card__title">Tips cepat</div>
+        <ul class="info-card__list">
+          <li>Copy Order ID dari halaman sukses / bukti pembayaran.</li>
+          <li>Kalau kamu baru saja order di device ini, klik <strong>Gunakan Order Terakhir</strong>.</li>
+          <li>Jika status belum berubah, tunggu beberapa menit lalu cek ulang.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="grid grid--2">
+        <div class="card">
+          <h2 class="card__title">Cari Pesanan</h2>
+          <p class="muted">Contoh format Order ID: <span class="code-pill">KS-123456</span></p>
+
+          <form class="form" autocomplete="off">
+            <div class="field">
+              <label class="field__label" for="statusOrderId">Order ID</label>
+              <input class="input" id="statusOrderId" name="order_id" placeholder="Masukkan Order ID" />
+            </div>
+
+            <div class="form__actions">
+              <button type="button" class="btn btn--primary" id="btnFindOrder">Cek Status</button>
+              <button type="button" class="btn btn--ghost" id="btnUseLast">Gunakan Order Terakhir</button>
+              <button type="button" class="btn btn--ghost" id="btnClearAll">Clear</button>
+            </div>
+
+            <div class="notice" id="statusError" hidden></div>
+            <div class="notice" id="clearOk" hidden></div>
+          </form>
+
+          <div class="divider"></div>
+          <div id="statusEmptyHint" class="muted">
+            Hasil status akan tampil di bawah setelah kamu klik <strong>Cek Status</strong>.
+          </div>
+        </div>
+
+        <div class="card">
+          <h2 class="card__title">Arti Status</h2>
+
+          <div class="status-panel">
+            <div class="status-row">
+              <div class="status-row__k">PENDING</div>
+              <div class="status-row__v muted">Pesanan masuk antrean.</div>
+            </div>
+            <div class="status-row">
+              <div class="status-row__k">PROCESS</div>
+              <div class="status-row__v muted">Sedang diproses.</div>
+            </div>
+            <div class="status-row">
+              <div class="status-row__k">SUCCESS</div>
+              <div class="status-row__v muted">Selesai / berhasil.</div>
+            </div>
+            <div class="status-row">
+              <div class="status-row__k">PARTIAL / REFUND</div>
+              <div class="status-row__v muted">Sebagian selesai atau ada pengembalian.</div>
+            </div>
+
+            <div class="status-footnote">
+              Catatan: istilah status bisa berbeda tergantung provider layanan.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="status-panel" id="statusResultWrap" hidden style="margin-top:16px;">
+        <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:10px;">
+          <div>
+            <div style="font-weight:800; letter-spacing:.2px;">Detail Status</div>
+            <div class="muted" id="uiSBrief">—</div>
+          </div>
+          <span class="badge" id="uiSStatus">—</span>
+        </div>
+
+        <div class="status-row">
+          <div class="status-row__k">Order ID</div>
+          <div class="status-row__v"><span class="code-pill" id="uiSOrderId">—</span></div>
+        </div>
+
+        <div class="status-row">
+          <div class="status-row__k">Layanan</div>
+          <div class="status-row__v" id="uiSService">—</div>
+        </div>
+
+        <div class="status-row">
+          <div class="status-row__k">Nama Paket</div>
+          <div class="status-row__v" id="uiSName">—</div>
+        </div>
+
+        <div class="status-row">
+          <div class="status-row__k">Target / Username</div>
+          <div class="status-row__v"><span class="code-pill" id="uiSAccount">—</span></div>
+        </div>
+
+        <div class="status-row">
+          <div class="status-row__k">Terakhir Update</div>
+          <div class="status-row__v" id="uiSUpdated">—</div>
+        </div>
+
+        <div class="status-row">
+          <div class="status-row__k">Deadline</div>
+          <div class="status-row__v" id="uiSDeadline">—</div>
+        </div>
+
+        <div class="status-row">
+          <div class="status-row__k">Kontak Admin</div>
+          <div class="status-row__v"><span class="code-pill" id="uiSWa">—</span></div>
+        </div>
+
+        <div class="status-actions">
+          <a class="btn btn--primary" id="btnChatStatus" href="#" target="_blank" rel="noopener">Chat Admin</a>
+          <a class="btn btn--ghost" id="btnChatStatus2" href="#" target="_blank" rel="noopener">Chat Admin (Backup)</a>
+        </div>
+
+        <div class="status-footnote" id="uiSNote"></div>
+
+        <details style="margin-top:12px;">
+          <summary class="muted" style="cursor:pointer;">Riwayat Update</summary>
+          <div class="muted" id="uiSHistoryMeta" style="margin-top:10px;"></div>
+          <ul class="status-history" id="uiSHistory" style="margin-top:10px;"></ul>
+        </details>
+      </div>
+
+      <p class="muted" style="margin-top:14px;">
+        Jika ada kendala, kirim Order ID kamu ke admin melalui WhatsApp agar dicek manual.
+      </p>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+    <div class="container">
+      <div class="footer">
+        <div>
+          <p class="footer__brand">Khonsu Socials</p>
+          <p class="muted" style="margin:6px 0 0; line-height:1.6;">
+            © <span id="year">2026</span> — Reseller system yang rapi.
+          </p>
+        </div>
+
+        <div class="footer__right">
+          <a class="footer__link" href="../index.html">Home</a>
+          <a class="footer__link" href="reseller-order.html">Reseller Order</a>
+          <a class="footer__link" href="https://wa.me/6281314604337" target="_blank" rel="noopener">WhatsApp</a>
+        </div>
+      </div>
+
+      <div class="footer__bottom">
+        <p class="muted" style="margin:0; line-height:1.7; font-size:12px;">
+          Semua komunikasi via WhatsApp. Order & status dicatat untuk tracking yang jelas.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+<script src="../assets/js/main.js" defer></script>
+</body>
+</html>
