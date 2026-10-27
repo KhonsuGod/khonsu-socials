@@ -212,11 +212,34 @@
     });
   }
 
+  function initZazouimMessage() {
+    var labels = qsa("[data-zazouim-text]");
+    if (!labels.length || prefersReducedMotion()) return;
+
+    labels.forEach(function (label) {
+      var message = label.getAttribute("data-zazouim-text") || "";
+      if (!message) return;
+      var index = 0;
+      label.textContent = "";
+      label.classList.add("is-typing");
+
+      window.setTimeout(function typeNextCharacter() {
+        label.textContent += message.charAt(index);
+        index += 1;
+        if (index < message.length) {
+          window.setTimeout(typeNextCharacter, 85);
+          return;
+        }
+        window.setTimeout(function () { label.classList.remove("is-typing"); }, 780);
+      }, 420);
+    });
+  }
+
   function initScrollReveal() {
     var isTransactional = !!qs("form, #btnOrderSubmit, #btnResellerSubmit, #btnFindOrder, #joinForm");
     var selectors = isTransactional
       ? "main .section, main > .container, .site-footer .footer"
-      : ".section-head, .service-index__item, .featured-work, .project-card, .journey, .faq-list details, .card, .select-card, .info-card, .notice, .portfolio-card, .service-card, .summary-card, .status-panel, .contact, .preview, .site-footer .footer";
+      : ".section-head, .intro-statement, .start-route, .service-index__item, .featured-work, .reseller-bridge, .profile-link, .reseller-active, .project-card, .journey, .faq-list details, .card, .select-card, .info-card, .notice, .portfolio-card, .service-card, .summary-card, .status-panel, .contact, .preview, .site-footer .footer";
     var seen = [];
     var siblingIndex = [];
     var els = qsa(selectors).filter(function (el) {
@@ -1791,6 +1814,7 @@ function ensureModal() {
       [root + "index.html", "Beranda", "index.html"],
       [root + "pages/layanan.html", "Layanan", "layanan.html"],
       [root + "pages/hasil-kerja.html", "Hasil Kerja", "hasil-kerja.html"],
+      [root + "pages/tentang.html", "Tentang", "tentang.html"],
       [root + "pages/status.html", "Cek Status", "status.html"],
       [root + "pages/reseller.html", "Reseller", "reseller.html"]
     ];
@@ -1798,8 +1822,9 @@ function ensureModal() {
     if (inPages) {
       items[1][0] = "layanan.html";
       items[2][0] = "hasil-kerja.html";
-      items[3][0] = "status.html";
-      items[4][0] = "reseller.html";
+      items[3][0] = "tentang.html";
+      items[4][0] = "status.html";
+      items[5][0] = "reseller.html";
     }
 
     links.innerHTML = items.map(function (item) {
@@ -1891,6 +1916,7 @@ function ensureModal() {
     initNavActive();
     initClickMicro();
     initHeroEntrance();
+    initZazouimMessage();
     initScrollReveal();
     initPortfolioModal();
 
