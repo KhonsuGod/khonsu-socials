@@ -3,10 +3,12 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="color-scheme" content="dark" />
+  <script>try{var t=localStorage.getItem("lunar-theme");document.documentElement.dataset.theme=t==="light"||t==="dark"?t:matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";}catch(_){document.documentElement.dataset.theme="dark";}</script>
+  <meta name="color-scheme" content="dark light" />
   <title>Daftar Reseller — Khonsu Socials</title>
   <meta name="khonsu-api" content="https://script.google.com/macros/s/AKfycbx7pUHlngyCkkYhP6FtbqeBexy0-dlE8jlyaiPBPCVFUFIGpEZdxR267Ohy3EPPVyf_/exec">
   <link rel="stylesheet" href="../assets/css/main.css" />
+  <link rel="stylesheet" href="../assets/css/lunar.css?v=4" />
   <style>
     /* Page-local, aman (hanya untuk halaman ini) */
     .join-wrap { max-width: 980px; margin-inline: auto; }
@@ -135,7 +137,7 @@
     </div>
   </footer>
 
-  <script defer src="../assets/js/main.js"></script>
+  <script defer src="../assets/js/main.js?v=4"></script>
   <script defer src="../assets/js/reseller-join.v2.js"></script>
 </body>
 </html>

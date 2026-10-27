@@ -3,11 +3,13 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script>try{var t=localStorage.getItem("lunar-theme");document.documentElement.dataset.theme=t==="light"||t==="dark"?t:matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";}catch(_){document.documentElement.dataset.theme="dark";}</script>
   <title>Cek Status — Khonsu Socials</title>
 <!-- API (WAJIB biar JS bisa baca endpoint tanpa localStorage) -->
   <meta name="khonsu-api" content="https://script.google.com/macros/s/AKfycbx7pUHlngyCkkYhP6FtbqeBexy0-dlE8jlyaiPBPCVFUFIGpEZdxR267Ohy3EPPVyf_/exec">
 
   <link rel="stylesheet" href="../assets/css/main.css" />
+  <link rel="stylesheet" href="../assets/css/lunar.css?v=4" />
   <meta name="description" content="Cek status pesanan Khonsu Socials. Masukkan Order ID untuk melihat progress, estimasi selesai, dan catatan admin." />
 
   <style>
@@ -216,6 +218,6 @@
     </div>
   </footer>
 
-<script src="../assets/js/main.js" defer></script>
+<script src="../assets/js/main.js?v=4" defer></script>
 </body>
 </html>

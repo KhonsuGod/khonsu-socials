@@ -143,8 +143,41 @@
   }
 
   /* =========================
-    2) GLOBAL UI: YEAR + MOTION
+    2) GLOBAL UI: THEME + MOTION
   ========================= */
+  function preferredTheme() {
+    try {
+      var saved = localStorage.getItem("lunar-theme");
+      if (saved === "light" || saved === "dark") return saved;
+      return window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+    } catch (_) {
+      return "dark";
+    }
+  }
+
+  function syncThemeControls(theme) {
+    qsa(".nav__theme-toggle").forEach(function (button) {
+      var nextLabel = theme === "light" ? "Gunakan tema gelap" : "Gunakan tema terang";
+      button.setAttribute("aria-label", nextLabel);
+      button.setAttribute("title", nextLabel);
+      button.setAttribute("aria-pressed", theme === "light" ? "true" : "false");
+    });
+  }
+
+  function setTheme(theme, persist) {
+    var next = theme === "light" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", next);
+    var colorMeta = qs('meta[name="theme-color"]');
+    if (colorMeta) colorMeta.setAttribute("content", next === "light" ? "#f6f5f1" : "#0b0e16");
+    if (persist) lsSet("lunar-theme", next);
+    syncThemeControls(next);
+  }
+
+  function initTheme() {
+    var initial = document.documentElement.getAttribute("data-theme");
+    setTheme(initial === "light" || initial === "dark" ? initial : preferredTheme(), false);
+  }
+
   function initYear() {
     var y = String(new Date().getFullYear());
     qsa("#year").forEach(function (el) { el.textContent = y; });
@@ -161,18 +194,60 @@
     }, { passive: true });
   }
 
+  function prefersReducedMotion() {
+    return window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  }
+
+  function initHeroEntrance() {
+    var els = qsa(".hero__content, .hero__visual, .page-hero > *, .page-hero__content");
+    if (!els.length || prefersReducedMotion()) return;
+
+    els.forEach(function (el, index) {
+      el.setAttribute("data-hero-motion", "");
+      el.style.setProperty("--hero-delay", String(index));
+    });
+
+    requestAnimationFrame(function () {
+      els.forEach(function (el) { el.classList.add("is-entered"); });
+    });
+  }
+
   function initScrollReveal() {
-    var els = qsa(".card, .select-card, .info-card, .notice, .portfolio-card, .service-card, .section-head, .page-hero, .summary-card");
-    if (!("IntersectionObserver" in window) || els.length === 0) return;
+    var isTransactional = !!qs("form, #btnOrderSubmit, #btnResellerSubmit, #btnFindOrder, #joinForm");
+    var selectors = isTransactional
+      ? "main .section, main > .container, .site-footer .footer"
+      : ".section-head, .service-index__item, .featured-work, .project-card, .journey, .faq-list details, .card, .select-card, .info-card, .notice, .portfolio-card, .service-card, .summary-card, .status-panel, .contact, .preview, .site-footer .footer";
+    var seen = [];
+    var siblingIndex = [];
+    var els = qsa(selectors).filter(function (el) {
+      if (el.closest(".section--hero, .section--page-hero")) return false;
+      if (seen.indexOf(el) >= 0) return false;
+      seen.push(el);
+      return true;
+    });
+
+    els.forEach(function (el) {
+      var parent = el.parentElement;
+      var entry = siblingIndex.filter(function (item) { return item.parent === parent; })[0];
+      var delay = entry ? entry.count++ % 5 : 0;
+      if (!entry) siblingIndex.push({ parent: parent, count: 1 });
+      el.setAttribute("data-reveal", "");
+      el.setAttribute("data-reveal-delay", String(delay));
+      el.style.setProperty("--reveal-delay", String(delay));
+    });
+
+    if (prefersReducedMotion() || !("IntersectionObserver" in window)) {
+      els.forEach(function (el) { el.classList.add("is-inview"); });
+      return;
+    }
 
     var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) {
-        if (en.isIntersecting) {
-          en.target.classList.add("is-inview");
-          io.unobserve(en.target);
-        }
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("is-inview");
+        io.unobserve(entry.target);
       });
-    }, { root: null, rootMargin: "0px 0px -10% 0px", threshold: 0.1 });
+    }, { root: null, rootMargin: "0px 0px -10% 0px", threshold: 0.15 });
 
     els.forEach(function (el) { io.observe(el); });
   }
@@ -1696,13 +1771,126 @@ function ensureModal() {
     });
   }
 
+  /* Shared public navigation. Keep transaction pages and their form contracts untouched. */
+  function initLunarNav() {
+    var nav = qs(".nav");
+    if (!nav || nav.getAttribute("data-lunar-nav") === "true") return;
+    var links = qs(".nav__center", nav);
+    if (!links) {
+      links = document.createElement("div");
+      links.className = "nav__center";
+      while (nav.firstChild) links.appendChild(nav.firstChild);
+      nav.appendChild(links);
+    }
+
+    var inPages = /\/pages\//.test(location.pathname || "");
+    var root = inPages ? "../" : "./";
+    var current = (location.pathname || "").split("/").pop() || "index.html";
+    var activePage = current === "website-development.html" ? "layanan.html" : current;
+    var items = [
+      [root + "index.html", "Beranda", "index.html"],
+      [root + "pages/layanan.html", "Layanan", "layanan.html"],
+      [root + "pages/hasil-kerja.html", "Hasil Kerja", "hasil-kerja.html"],
+      [root + "pages/status.html", "Cek Status", "status.html"],
+      [root + "pages/reseller.html", "Reseller", "reseller.html"]
+    ];
+
+    if (inPages) {
+      items[1][0] = "layanan.html";
+      items[2][0] = "hasil-kerja.html";
+      items[3][0] = "status.html";
+      items[4][0] = "reseller.html";
+    }
+
+    links.innerHTML = items.map(function (item) {
+      var active = item[2] === activePage ? ' aria-current="page"' : "";
+      return '<a class="nav__link" href="' + item[0] + '"' + active + ">" + item[1] + "</a>";
+    }).join("");
+
+    var header = nav.closest(".site-header");
+    var brandName = qs(".brand__name, .brand__title", header);
+    var brandTag = qs(".brand__tag, .brand__sub", header);
+    if (brandName) brandName.textContent = "Khonsu Socials";
+    if (brandTag) brandTag.textContent = "Lunar Digital Studio";
+
+    var right = qs(".nav__right", nav);
+    if (!right) {
+      right = document.createElement("div");
+      right.className = "nav__right";
+      nav.appendChild(right);
+    }
+
+    var themeToggle = document.createElement("button");
+    themeToggle.className = "nav__theme-toggle";
+    themeToggle.type = "button";
+    themeToggle.innerHTML =
+      '<svg class="nav__theme-icon nav__theme-icon--sun" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="3.5"></circle><path d="M12 2.5v2M12 19.5v2M4.6 4.6 6 6M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4"></path></svg>' +
+      '<svg class="nav__theme-icon nav__theme-icon--moon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M20.2 14.7A8.5 8.5 0 0 1 9.3 3.8 8.5 8.5 0 1 0 20.2 14.7Z"></path></svg>';
+    right.appendChild(themeToggle);
+    syncThemeControls(document.documentElement.getAttribute("data-theme") || "dark");
+    themeToggle.addEventListener("click", function () {
+      var currentTheme = document.documentElement.getAttribute("data-theme") || "dark";
+      setTheme(currentTheme === "dark" ? "light" : "dark", true);
+    });
+
+    var consult = document.createElement("a");
+    consult.className = "btn nav__consult";
+    consult.href = "https://wa.me/6281314604337?text=Halo%20Khonsu%20Socials%2C%20saya%20ingin%20konsultasi%20proyek.";
+    consult.target = "_blank";
+    consult.rel = "noopener noreferrer";
+    consult.textContent = "Konsultasi";
+    right.appendChild(consult);
+
+    var toggle = document.createElement("button");
+    toggle.className = "nav__toggle";
+    toggle.type = "button";
+    toggle.setAttribute("aria-controls", "lunar-nav-links");
+    toggle.setAttribute("aria-expanded", "false");
+    toggle.textContent = "Menu";
+    links.id = "lunar-nav-links";
+    nav.appendChild(toggle);
+    nav.setAttribute("data-lunar-nav", "true");
+
+    function closeMenu() {
+      nav.setAttribute("data-nav-open", "false");
+      toggle.setAttribute("aria-expanded", "false");
+    }
+    toggle.addEventListener("click", function () {
+      var open = nav.getAttribute("data-nav-open") === "true";
+      nav.setAttribute("data-nav-open", String(!open));
+      toggle.setAttribute("aria-expanded", String(!open));
+    });
+    links.addEventListener("click", function (event) {
+      if (event.target.closest("a")) closeMenu();
+    });
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape") {
+        closeMenu();
+        toggle.focus();
+      }
+    });
+  }
+
+  function initBrandFavicon() {
+    if (qs('link[rel~="icon"]')) return;
+    var icon = document.createElement("link");
+    icon.rel = "icon";
+    icon.type = "image/png";
+    icon.href = /\/pages\//.test(location.pathname || "") ? "../assets/images/brand/logo.png" : "./assets/images/brand/logo.png";
+    document.head.appendChild(icon);
+  }
+
   /* =========================
     13) BOOT
   ========================= */
   function boot() {
+    initTheme();
     initYear();
+    initBrandFavicon();
+    initLunarNav();
     initNavActive();
     initClickMicro();
+    initHeroEntrance();
     initScrollReveal();
     initPortfolioModal();
 

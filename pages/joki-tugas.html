@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script>try{var t=localStorage.getItem("lunar-theme");document.documentElement.dataset.theme=t==="light"||t==="dark"?t:matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";}catch(_){document.documentElement.dataset.theme="dark";}</script>
   <meta name="theme-color" content="#0b0f17" />
   <meta name="description" content="Khonsu Socials — Joki Tugas: layanan pendampingan tugas dengan alur jelas, komunikasi via WhatsApp, pembayaran manual setelah konfirmasi." />
 
@@ -10,6 +11,7 @@
 
   <!-- WAJIB: Path sesuai struktur folder -->
   <link rel="stylesheet" href="../assets/css/main.css" />
+  <link rel="stylesheet" href="../assets/css/lunar.css?v=4" />
 </head>
 
 <body class="theme theme--dark">
@@ -336,7 +338,7 @@
   </noscript>
 
   <!-- WAJIB: Path sesuai struktur folder -->
-  <script src="../assets/js/main.js" defer></script>
+  <script src="../assets/js/main.js?v=4" defer></script>
 
   <!--
     Catatan roadmap:

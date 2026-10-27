@@ -22,6 +22,36 @@
     }
   }
 
+  function canDrift() {
+    try {
+      return !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function initDrift(card) {
+    if (!canDrift()) return;
+    var raf = 0;
+
+    function update() {
+      raf = 0;
+      var rect = card.getBoundingClientRect();
+      var viewportCenter = window.innerHeight / 2;
+      var elementCenter = rect.top + (rect.height / 2);
+      var progress = clamp((viewportCenter - elementCenter) / Math.max(window.innerHeight, 1), -0.5, 0.5);
+      card.style.setProperty("--lunar-drift", (progress * 18).toFixed(2) + "px");
+    }
+
+    function requestUpdate() {
+      if (!raf) raf = requestAnimationFrame(update);
+    }
+
+    window.addEventListener("scroll", requestUpdate, { passive: true });
+    window.addEventListener("resize", requestUpdate, { passive: true });
+    update();
+  }
+
   function initCard(card) {
     // Defaults
     card.style.setProperty("--mx", "50%");
@@ -45,8 +75,8 @@
       card.style.setProperty("--mx", (xp * 100).toFixed(2) + "%");
       card.style.setProperty("--my", (yp * 100).toFixed(2) + "%");
 
-      // Tilt (strong, but controlled)
-      var MAX_TILT = 9; // degrees
+       // Keep the crescent responsive without making the hero feel like a card UI.
+       var MAX_TILT = 5; // degrees
       var rx = (0.5 - yp) * MAX_TILT;
       var ry = (xp - 0.5) * MAX_TILT;
 
@@ -91,10 +121,10 @@
   }
 
   function init() {
-    if (!canRun()) return;
     var cards = document.querySelectorAll("[data-home-motion]");
     if (!cards || !cards.length) return;
-    cards.forEach(initCard);
+    cards.forEach(initDrift);
+    if (canRun()) cards.forEach(initCard);
   }
 
   if (document.readyState === "loading") {
