@@ -1,0 +1,211 @@
+@import url("../../tokens.css");
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600&display=swap");
+
+.maintenance-page {
+  background: #0b0e16;
+  color: var(--maint-text);
+  font-family: var(--font-body);
+  min-width: 320px;
+  overflow-x: hidden;
+}
+
+.maintenance-skip {
+  background: var(--maint-text);
+  color: var(--maint-bg);
+  left: 1rem;
+  padding: 0.75rem 1rem;
+  position: fixed;
+  top: 1rem;
+  transform: translateY(-160%);
+  transition: transform 180ms var(--ease-out);
+  z-index: 5;
+}
+
+.maintenance-skip:focus-visible {
+  outline: 3px solid var(--maint-violet);
+  outline-offset: 3px;
+  transform: translateY(0);
+}
+
+.maintenance {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  margin-inline: auto;
+  max-width: 92rem;
+  min-height: 100dvh;
+  padding: clamp(1.25rem, 3.5vw, 3.5rem);
+}
+
+.maintenance__brand,
+.maintenance__signature {
+  color: var(--maint-muted);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  margin: 0;
+}
+
+.maintenance__brand { text-transform: uppercase; }
+.maintenance__signature { align-self: end; justify-self: end; letter-spacing: 0.1em; }
+
+.maintenance__scene {
+  align-items: center;
+  display: grid;
+  min-height: 0;
+  padding-block: clamp(1.5rem, 4vw, 4rem);
+  position: relative;
+}
+
+.maintenance__art {
+  height: min(72vh, 44rem);
+  max-height: 100%;
+  pointer-events: none;
+  position: absolute;
+  right: clamp(-7rem, -2vw, -1rem);
+  top: 50%;
+  transform: translateY(-50%);
+  width: min(69vw, 58rem);
+  z-index: 0;
+}
+
+.maintenance__svg { display: block; height: 100%; overflow: visible; width: 100%; }
+
+.maintenance__copy {
+  max-width: min(36rem, 48vw);
+  position: relative;
+  z-index: 1;
+}
+
+.maintenance__copy h1 {
+  color: var(--maint-text);
+  font-size: clamp(2.75rem, 5.3vw, 5.5rem);
+  font-weight: 500;
+  letter-spacing: -0.072em;
+  line-height: 0.94;
+  margin: 0;
+  text-wrap: balance;
+}
+
+.maintenance__actions {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem clamp(1.25rem, 2.6vw, 2.25rem);
+  margin-top: clamp(1.8rem, 3.5vw, 2.8rem);
+}
+
+.maintenance__action {
+  align-items: center;
+  border-bottom: 1px solid color-mix(in srgb, var(--maint-muted) 45%, transparent);
+  color: var(--maint-text);
+  display: inline-flex;
+  font-size: 0.9rem;
+  font-weight: 500;
+  line-height: 1.2;
+  min-height: 44px;
+  transition: border-color 180ms var(--ease-out), color 180ms var(--ease-out), transform 180ms var(--ease-out);
+}
+
+.maintenance__action--instagram { border-color: var(--maint-violet); }
+.maintenance__action:focus-visible { outline: 3px solid var(--maint-violet); outline-offset: 4px; }
+
+@media (hover: hover) {
+  .maintenance__action:hover { border-color: var(--maint-violet); color: #d9d4f2; transform: translateY(-1px); }
+}
+
+/* Moon, terminator, character rim and atmosphere share the single fingertip ignition. */
+.air-spill { fill: #a89cd9; filter: url(#soft-light); opacity: 0.03; transform-box: fill-box; transform-origin: center; }
+.light-thread { fill: none; opacity: 0; stroke: #d9d4f2; stroke-dasharray: 360; stroke-dashoffset: 360; stroke-linecap: round; stroke-width: 2; }
+.moon-base { fill: url(#moon-base); }
+.moon-surface { fill: #4f5874; opacity: 0.28; }
+.moon-surface path:nth-child(2n) { fill: #eef0f7; opacity: 0.35; }
+.moon-terminator { fill: url(#moon-shadow); opacity: 0.37; transform-box: fill-box; transform-origin: center; }
+.moon-rim { fill: none; opacity: 0.44; stroke: url(#moon-rim); stroke-width: 4; }
+.cloak-rim { fill: none; opacity: 0.14; stroke: #a89cd9; stroke-width: 20; }
+.veil { fill: url(#veil-fill); }
+.veil-shadow { fill: #090c14; opacity: 0.96; }
+.head { fill: #171d30; }
+.face-plane { fill: #0b0f1a; }
+.neck { fill: #121827; }
+.cloak { fill: url(#cloak-fill); }
+.cloak-fold { fill: none; opacity: 0.34; stroke: #657092; stroke-linecap: round; stroke-width: 5; }
+.shoulder-light { fill: none; opacity: 0.22; stroke: #a89cd9; stroke-linecap: round; stroke-width: 5; }
+.upper-arm, .forearm, .hand { fill: #161d30; }
+.fingertip-line { fill: none; opacity: 0.34; stroke: #a89cd9; stroke-linecap: round; stroke-width: 3; }
+.body-rim { fill: none; opacity: 0.2; stroke: #a89cd9; stroke-linecap: round; stroke-width: 4; }
+.arm { transform-box: view-box; }
+.arm--upper { transform-origin: 585px 326px; }
+.arm--forearm { transform-origin: 692px 286px; }
+.light-core { fill: #fffef9; filter: url(#fine-glow); opacity: 0.45; }
+.light-bloom { fill: url(#fingertip-light); opacity: 0.12; transform-box: fill-box; transform-origin: center; }
+.light-path { fill: none; opacity: 0; stroke: #ede8ff; stroke-dasharray: 400; stroke-dashoffset: 400; stroke-linecap: round; stroke-width: 2.5; }
+
+/* The complete state is the no-JS and reduced-motion fallback. */
+.maintenance-page.is-animating:not([data-scene="complete"]) .maintenance__copy,
+.maintenance-page.is-animating:not([data-scene="complete"]) .maintenance__actions,
+.maintenance-page.is-animating:not([data-scene="complete"]) .maintenance__signature { opacity: 0; transform: translateY(0.8rem); }
+.maintenance__copy,
+.maintenance__actions,
+.maintenance__signature { transition: opacity 680ms var(--ease-out), transform 680ms var(--ease-out); }
+
+.maintenance-page.is-animating[data-scene="dark"] .lunar-disc,
+.maintenance-page.is-animating[data-scene="gesture"] .lunar-disc { opacity: 0.48; transform: scale(0.96); transform-origin: 690px 320px; }
+.lunar-disc { transform-origin: 690px 320px; transition: opacity 900ms var(--ease-out), transform 1200ms var(--ease-out); }
+.maintenance-page.is-animating[data-scene="dark"] .moon-terminator,
+.maintenance-page.is-animating[data-scene="gesture"] .moon-terminator { opacity: 0.78; transform: translateX(-14px); }
+.maintenance-page.is-animating[data-scene="dark"] .moon-rim,
+.maintenance-page.is-animating[data-scene="gesture"] .moon-rim { opacity: 0.14; }
+.maintenance-page.is-animating[data-scene="dark"] .zazouim { opacity: 0.12; transform: translate(-18px, 14px); }
+.zazouim { opacity: 1; transform-origin: 590px 430px; transition: opacity 800ms var(--ease-out), transform 1150ms var(--ease-out); }
+.maintenance-page.is-animating[data-scene="dark"] .arm--upper { transform: rotate(42deg); }
+.maintenance-page.is-animating[data-scene="dark"] .arm--forearm { transform: rotate(48deg); }
+.arm--upper, .arm--forearm { transition: transform 1250ms cubic-bezier(.2,.9,.22,1); }
+.maintenance-page.is-animating[data-scene="gesture"] .zazouim { opacity: 1; transform: translate(0, 0); }
+.maintenance-page.is-animating[data-scene="gesture"] .air-spill { opacity: 0.13; transform: scale(0.76); }
+.maintenance-page.is-animating[data-scene="ignition"] .light-core { opacity: 1; }
+.maintenance-page.is-animating[data-scene="ignition"] .light-bloom { opacity: 0.92; transform: scale(1.1); }
+.maintenance-page.is-animating[data-scene="ignition"] .light-path,
+.maintenance-page.is-animating[data-scene="ignition"] .light-thread { opacity: 0.78; stroke-dashoffset: 0; transition: stroke-dashoffset 1350ms cubic-bezier(.2,.8,.2,1), opacity 300ms linear; }
+.maintenance-page.is-animating[data-scene="ignition"] .moon-terminator { opacity: 0.37; transform: translateX(0); transition: opacity 1350ms var(--ease-out), transform 1350ms var(--ease-out); }
+.maintenance-page.is-animating[data-scene="ignition"] .moon-rim { opacity: 0.78; transition: opacity 1200ms var(--ease-out); }
+.maintenance-page.is-animating[data-scene="ignition"] .air-spill { opacity: 0.18; transform: scale(1); transition: opacity 1300ms var(--ease-out), transform 1300ms var(--ease-out); }
+.maintenance-page.is-animating[data-scene="ignition"] .cloak-rim,
+.maintenance-page.is-animating[data-scene="ignition"] .body-rim,
+.maintenance-page.is-animating[data-scene="ignition"] .shoulder-light { opacity: 0.76; transition: opacity 1050ms var(--ease-out); }
+.maintenance-page.is-animating[data-scene="complete"] .maintenance__copy,
+.maintenance-page.is-animating[data-scene="complete"] .maintenance__actions,
+.maintenance-page.is-animating[data-scene="complete"] .maintenance__signature { opacity: 1; transform: translateY(0); }
+
+@media (max-width: 52rem) {
+  .maintenance { padding: 1.25rem; }
+  .maintenance__scene { align-items: end; min-height: calc(100dvh - 6.5rem); padding-block: 2rem; }
+  .maintenance__art { height: min(54vh, 31rem); right: -2.2rem; top: 4%; transform: none; width: min(112vw, 43rem); }
+  .maintenance__copy { max-width: 22rem; }
+  .maintenance__copy h1 { font-size: clamp(2.55rem, 11.1vw, 4.25rem); }
+  .maintenance__actions { align-items: flex-start; flex-direction: column; gap: 0.45rem; margin-top: 1.65rem; }
+}
+
+@media (max-width: 22.5rem) {
+  .maintenance { padding: 1rem; }
+  .maintenance__art { right: -0.75rem; width: 112vw; }
+  .maintenance__copy h1 { font-size: 2.45rem; }
+}
+
+@media (max-height: 43rem) and (min-width: 52.0625rem) {
+  .maintenance__art { height: min(82vh, 35rem); }
+  .maintenance__copy h1 { font-size: clamp(2.6rem, 5vw, 4.6rem); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .maintenance-page *, .maintenance-page *::before, .maintenance-page *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+
+}
+
+@media (prefers-reduced-motion: reduce) and (max-width: 52rem) {
+  .maintenance__art { height: min(36vh, 19rem); top: 0; }
+}
