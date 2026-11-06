@@ -1,5 +1,14 @@
-@import url("../../tokens.css");
 @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600&display=swap");
+
+:root {
+  --maint-bg: oklch(16.2% 0.020 267);
+  --maint-text: oklch(94.6% 0.006 270);
+  --maint-muted: oklch(74.8% 0.029 257);
+  --maint-violet: oklch(68.3% 0.060 302);
+  --font-body: Manrope, "Avenir Next", "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}
 
 .maintenance-page {
   background: #0b0e16;
